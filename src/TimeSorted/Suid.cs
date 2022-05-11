@@ -3,9 +3,12 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Threading;
+
+// ReSharper disable RedundantCast
 
 /// <summary>
 /// Time-sortable GUID-like identifier with one byte dedicated to tagging the source or type of ID.
@@ -146,31 +149,33 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         b15 = (byte)rand.Next(0, 256);
     }
 
-    private Suid(long hi, long lo)
+    private Suid(int i1, int i2, int i3, int i4)
     {
-        b0 = (byte)((hi >> 56) & 0xFF);
-        b1 = (byte)((hi >> 48) & 0xFF);
-        b2 = (byte)((hi >> 40) & 0xFF);
-        b3 = (byte)((hi >> 32) & 0xFF);
-        b4 = (byte)((hi >> 24) & 0xFF);
-        b5 = (byte)((hi >> 16) & 0xFF);
-        b6 = (byte)((hi >> 8) & 0xFF);
-        b7 = (byte)(hi & 0xFF);
+        b0 = (byte)((i1 >> 24) & 0xFF);
+        b1 = (byte)((i1 >> 16) & 0xFF);
+        b2 = (byte)((i1 >> 8) & 0xFF);
+        b3 = (byte)(i1 & 0xFF);
 
-        b8 = (byte)((lo >> 56) & 0xFF);
-        b9 = (byte)((lo >> 48) & 0xFF);
-        b10 = (byte)((lo >> 40) & 0xFF);
-        b11 = (byte)((lo >> 32) & 0xFF);
-        b12 = (byte)((lo >> 24) & 0xFF);
-        b13 = (byte)((lo >> 16) & 0xFF);
-        b14 = (byte)((lo >> 8) & 0xFF);
-        b15 = (byte)(lo & 0xFF);
+        b4 = (byte)((i2 >> 24) & 0xFF);
+        b5 = (byte)((i2 >> 16) & 0xFF);
+        b6 = (byte)((i2 >> 8) & 0xFF);
+        b7 = (byte)(i2 & 0xFF);
+
+        b8 = (byte)((i3 >> 24) & 0xFF);
+        b9 = (byte)((i3 >> 16) & 0xFF);
+        b10 = (byte)((i3 >> 8) & 0xFF);
+        b11 = (byte)(i3 & 0xFF);
+
+        b12 = (byte)((i4 >> 24) & 0xFF);
+        b13 = (byte)((i4 >> 16) & 0xFF);
+        b14 = (byte)((i4 >> 8) & 0xFF);
+        b15 = (byte)(i4 & 0xFF);
 
         ValidateInternalData();
     }
 
-    private Suid(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : this(serializationInfo.GetInt64("High"), serializationInfo.GetInt64("Low"))
+    private Suid(SerializationInfo info, StreamingContext streamingContext)
+        : this(info.GetInt32("i1"), info.GetInt32("i2"), info.GetInt32("i3"), info.GetInt32("i4"))
     {
     }
 
@@ -293,7 +298,10 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
 
     public Guid ToGuid()
     {
-        throw new NotImplementedException();
+        int a = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+        short b = (short)((b4 << 8) | b5);
+        short c = (short)((b6 << 8) | b7);
+        return new Guid(a, b, c, b8, b9, b10, b11, b12, b13, b14, b15);
     }
 
     public byte[] ToByteArray()
@@ -313,8 +321,12 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
     }
 
     public long ToUnixTimeMilliseconds()
+        => ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long ToUnixTimeMilliseconds(byte b1, byte b2,  byte b3,  byte b4, byte b5, byte b6)
     {
-        return ((long)b1 << 40) + ((long)b2 << 32) + ((long)b3 << 24) + (b4 << 16) + (b5 << 8) + b6;
+        return (long)(((ulong)b1 << 40) | ((ulong)b2 << 32) | ((ulong)b3 << 24) | ((ulong)b4 << 16) | ((ulong)b5 << 8) | (ulong)b6);
     }
 
     private void ValidateInternalData()
@@ -326,23 +338,21 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         }
     }
 
-    public (long High, long Low) ToHighLowInt64()
-    {
-        var high = ((long)b0 << 48) + ((long)b1 << 40) + ((long)b3 << 32) + (b4 << 24) + (b5 << 16) + (b6 << 8) + b7;
-        var low = ((long)b8 << 48) + ((long)b9 << 40) + ((long)b10 << 32) + (b11 << 24) + (b12 << 16) + (b13 << 8) + b14;
-        return (high, low);
-    }
-
     public string ToDebugString()
     {
-        return $"{ToString()}, {Tag}, {ToDateTimeOffset():s}";
+        return $"{ToString()}, {Tag}, {ToDateTimeOffset():yyyy-MM-ddTHH:mm:ss.fff}";
     }
 
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        var (high, low) = ToHighLowInt64();
-        info.AddValue("High", high, typeof(long));
-        info.AddValue("Low", low, typeof(long));
+        var i1 = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+        var i2 = (b4 << 24) | (b5 << 16) | (b6 << 8) | b7;
+        var i3 = (b8 << 24) | (b9 << 16) | (b10 << 8) | b11;
+        var i4 = (b12 << 24) | (b13 << 16) | (b14 << 8) | b15;
+        info.AddValue("i1", i1, typeof(int));
+        info.AddValue("i2", i2, typeof(int));
+        info.AddValue("i3", i3, typeof(int));
+        info.AddValue("i4", i4, typeof(int));
     }
 
     public static bool TryParse(ReadOnlySpan<byte> b, out Suid suid)
@@ -354,6 +364,45 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         }
 
         suid = new Suid(b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15], true);
+        return true;
+    }
+
+    public static bool TryParse(ReadOnlySpan<char> s, out Suid suid)
+    {
+        if (s.Length != 36)
+        {
+            suid = Empty;
+            return false;
+        }
+
+        var b0 = ByteUtil.ReadHex(s, 0);
+        var b1 = ByteUtil.ReadHex(s, 2);
+        var b2 = ByteUtil.ReadHex(s, 4);
+        var b3 = ByteUtil.ReadHex(s, 6);
+
+        // separator '-' at index 8
+        var b4 = ByteUtil.ReadHex(s, 9);
+        var b5 = ByteUtil.ReadHex(s, 11);
+
+        // separator '-' at index 13
+        var b6 = ByteUtil.ReadHex(s, 14);
+        var b7 = ByteUtil.ReadHex(s, 16);
+
+        // separator '-' at index 18
+        var b8 = ByteUtil.ReadHex(s, 19);
+        var b9 = ByteUtil.ReadHex(s, 21);
+
+        // separator '-' at index 25
+        var b10 = ByteUtil.ReadHex(s, 24);
+        var b11 = ByteUtil.ReadHex(s, 26);
+        var b12 = ByteUtil.ReadHex(s, 28);
+        var b13 = ByteUtil.ReadHex(s, 30);
+        var b14 = ByteUtil.ReadHex(s, 32);
+        var b15 = ByteUtil.ReadHex(s, 34);
+
+        var ms = ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
+
+        suid = new Suid(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, false);
         return true;
     }
 
