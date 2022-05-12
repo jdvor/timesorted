@@ -117,9 +117,9 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         this.b14 = b14;
         this.b15 = b15;
 
-        if (validate)
+        if (validate && !IsDateValid(b1, b2, b3, b4, b5, b6))
         {
-            ValidateInternalData();
+            ThrowInvalidDateException();
         }
     }
 
@@ -171,7 +171,10 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         b14 = (byte)((i4 >> 8) & 0xFF);
         b15 = (byte)(i4 & 0xFF);
 
-        ValidateInternalData();
+        if (!IsDateValid(b1, b2, b3, b4, b5, b6))
+        {
+            ThrowInvalidDateException();
+        }
     }
 
     private Suid(SerializationInfo info, StreamingContext streamingContext)
@@ -261,39 +264,39 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
 
     public override string ToString()
     {
-        const char sep = '-';
-        var chars = new char[36];
+        return string.Create(36, this, (chars, s) =>
+        {
+            const char sep = '-';
 
-        ByteUtil.WriteHex(chars, b0, 0);
-        ByteUtil.WriteHex(chars, b1, 2);
-        ByteUtil.WriteHex(chars, b2, 4);
-        ByteUtil.WriteHex(chars, b3, 6);
+            ByteUtil.WriteHex(chars, s.b0, 0);
+            ByteUtil.WriteHex(chars, s.b1, 2);
+            ByteUtil.WriteHex(chars, s.b2, 4);
+            ByteUtil.WriteHex(chars, s.b3, 6);
 
-        chars[8] = sep;
+            chars[8] = sep;
 
-        ByteUtil.WriteHex(chars, b4, 9);
-        ByteUtil.WriteHex(chars, b5, 11);
+            ByteUtil.WriteHex(chars, s.b4, 9);
+            ByteUtil.WriteHex(chars, s.b5, 11);
 
-        chars[13] = sep;
+            chars[13] = sep;
 
-        ByteUtil.WriteHex(chars, b6, 14);
-        ByteUtil.WriteHex(chars, b7, 16);
+            ByteUtil.WriteHex(chars, s.b6, 14);
+            ByteUtil.WriteHex(chars, s.b7, 16);
 
-        chars[18] = sep;
+            chars[18] = sep;
 
-        ByteUtil.WriteHex(chars, b8, 19);
-        ByteUtil.WriteHex(chars, b9, 21);
+            ByteUtil.WriteHex(chars, s.b8, 19);
+            ByteUtil.WriteHex(chars, s.b9, 21);
 
-        chars[23] = sep;
+            chars[23] = sep;
 
-        ByteUtil.WriteHex(chars, b10, 24);
-        ByteUtil.WriteHex(chars, b11, 26);
-        ByteUtil.WriteHex(chars, b12, 28);
-        ByteUtil.WriteHex(chars, b13, 30);
-        ByteUtil.WriteHex(chars, b14, 32);
-        ByteUtil.WriteHex(chars, b15, 34);
-
-        return new string(chars);
+            ByteUtil.WriteHex(chars, s.b10, 24);
+            ByteUtil.WriteHex(chars, s.b11, 26);
+            ByteUtil.WriteHex(chars, s.b12, 28);
+            ByteUtil.WriteHex(chars, s.b13, 30);
+            ByteUtil.WriteHex(chars, s.b14, 32);
+            ByteUtil.WriteHex(chars, s.b15, 34);
+        });
     }
 
     public Guid ToGuid()
@@ -322,26 +325,6 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
 
     public long ToUnixTimeMilliseconds()
         => ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static long ToUnixTimeMilliseconds(byte b1, byte b2,  byte b3,  byte b4, byte b5, byte b6)
-    {
-        return (long)(((ulong)b1 << 40) | ((ulong)b2 << 32) | ((ulong)b3 << 24) | ((ulong)b4 << 16) | ((ulong)b5 << 8) | (ulong)b6);
-    }
-
-    private void ValidateInternalData()
-    {
-        var milis = ToUnixTimeMilliseconds();
-        if (milis > MaxValidMs || milis < MinValidMs)
-        {
-            throw new InvalidDataException("bytes dedicated to storing date contain date outside of expected range");
-        }
-    }
-
-    public string ToDebugString()
-    {
-        return $"{ToString()}, {Tag}, {ToDateTimeOffset():yyyy-MM-ddTHH:mm:ss.fff}";
-    }
 
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -400,10 +383,38 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         var b14 = ByteUtil.ReadHex(s, 32);
         var b15 = ByteUtil.ReadHex(s, 34);
 
-        var ms = ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
+        if (!IsDateValid(b1, b2, b3, b4, b5, b6))
+        {
+            suid = Empty;
+            return false;
+        }
 
         suid = new Suid(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, false);
         return true;
+    }
+
+    public string ToDebugString()
+    {
+        return $"{ToString()}, {Tag}, {ToDateTimeOffset():yyyy-MM-ddTHH:mm:ss.fff}";
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long ToUnixTimeMilliseconds(byte b1, byte b2,  byte b3,  byte b4, byte b5, byte b6)
+    {
+        return (long)(((ulong)b1 << 40) | ((ulong)b2 << 32) | ((ulong)b3 << 24) | ((ulong)b4 << 16) | ((ulong)b5 << 8) | (ulong)b6);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsDateValid(byte b1, byte b2,  byte b3,  byte b4, byte b5, byte b6)
+    {
+        var milis = ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
+        return milis >= MinValidMs && milis <= MaxValidMs;
+    }
+
+    [System.Diagnostics.StackTraceHidden]
+    private static void ThrowInvalidDateException()
+    {
+        throw new InvalidDataException("bytes dedicated to storing date contain date outside of expected range");
     }
 
     #region Operator overloads

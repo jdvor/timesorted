@@ -23,6 +23,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{42F98E33-5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSorted.Tests", "test\TimeSorted.Tests\TimeSorted.Tests.csproj", "{5A58FF97-6272-4034-8C51-DCE6B0A0924E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSorted.Benchmarks", "bench\TimeSorted.Benchmarks\TimeSorted.Benchmarks.csproj", "{951F4000-8670-48D8-911A-7DAF2B6E466E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bench", "bench", "{96985C1F-3E73-4518-B3DB-8077C60B3F9C}"
+	ProjectSection(SolutionItems) = preProject
+		bench\Directory.Build.props = bench\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,9 +44,14 @@ Global
 		{5A58FF97-6272-4034-8C51-DCE6B0A0924E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A58FF97-6272-4034-8C51-DCE6B0A0924E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A58FF97-6272-4034-8C51-DCE6B0A0924E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{951F4000-8670-48D8-911A-7DAF2B6E466E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{951F4000-8670-48D8-911A-7DAF2B6E466E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{951F4000-8670-48D8-911A-7DAF2B6E466E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{951F4000-8670-48D8-911A-7DAF2B6E466E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DB6574B5-C860-451C-A4D4-EDF532E1B9CB} = {1946D270-F0F7-4558-B56B-BDC12563A129}
 		{42F98E33-53D6-4CA6-9954-91CCDD713B1E} = {1946D270-F0F7-4558-B56B-BDC12563A129}
+		{96985C1F-3E73-4518-B3DB-8077C60B3F9C} = {1946D270-F0F7-4558-B56B-BDC12563A129}
 	EndGlobalSection
 EndGlobal

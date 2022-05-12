@@ -45,6 +45,17 @@ public class UnitTest1
     }
 
     [Fact]
+    public void StringSerialization()
+    {
+        var expected = Suid.NewSuid(tag: 8);
+        var str1 = expected.ToString();
+        var ok = Suid.TryParse(str1, out var actual);
+
+        Assert.True(ok);
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public void SystemRuntimeSerializable()
     {
         #pragma warning disable SYSLIB0011

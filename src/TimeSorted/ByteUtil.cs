@@ -6,16 +6,6 @@ internal static class ByteUtil
 {
     private static readonly uint[] Lookup32 = CreateLookup32();
 
-    private static readonly Dictionary<char, byte> HexLookup = new Dictionary<char, byte>()
-    {
-        { 'a', 0xA }, { 'b', 0xB }, { 'c', 0xC }, { 'd', 0xD },
-        { 'e', 0xE }, { 'f', 0xF }, { 'A', 0xA }, { 'B', 0xB },
-        { 'C', 0xC }, { 'D', 0xD }, { 'E', 0xE }, { 'F', 0xF },
-        { '0', 0x0 }, { '1', 0x1 }, { '2', 0x2 }, { '3', 0x3 },
-        { '4', 0x4 }, { '5', 0x5 }, { '6', 0x6 }, { '7', 0x7 },
-        { '8', 0x8 }, { '9', 0x9 },
-    };
-
     private static uint[] CreateLookup32()
     {
         var result = new uint[256];
@@ -39,8 +29,25 @@ internal static class ByteUtil
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static byte ReadHex(ReadOnlySpan<char> chars, int position = 0)
     {
-        var ch1 = chars[position];
-        var ch2 = chars[position + 1];
-        return (byte)((HexLookup[ch1] << 4) | HexLookup[ch2]);
+        var hi = (int)chars[position];
+        var lo = (int)chars[position + 1];
+
+        hi = hi switch
+        {
+            >= 48 and <= 57 => hi - 48, // char: 0..9
+            >= 65 and <= 70 => hi - 55, // char: A..F
+            >= 97 and <= 102 => hi - 87, // char: a..f
+            _ => 0,
+        };
+
+        lo = lo switch
+        {
+            >= 48 and <= 57 => lo - 48,
+            >= 65 and <= 70 => lo - 55,
+            >= 97 and <= 102 => lo - 87,
+            _ => 0,
+        };
+
+        return (byte)((hi << 4) | lo);
     }
 }

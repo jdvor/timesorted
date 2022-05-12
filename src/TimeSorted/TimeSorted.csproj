@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(DotnetFramework)</TargetFramework>
+<!--    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>-->
     <Description>Lorem ispum dolor sit.</Description>
   </PropertyGroup>
 
