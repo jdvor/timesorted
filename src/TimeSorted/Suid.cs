@@ -89,12 +89,15 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
     #endregion
 
     /// <summary>
-    /// ???
+    /// Source or ID type.
     /// </summary>
     public byte Tag => b0;
 
     public bool IsEmpty => Equals(Empty);
 
+    /// <summary>
+    /// Constructor used for parsing from string or bytes and also creating specific Suid instances such as Empty.
+    /// </summary>
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1117:Parameters should be on same line or separate lines",
         Justification = "separate lines occupies too much of vertical space")]
     private Suid(byte b0, byte b1, byte b2,  byte b3,  byte b4, byte b5, byte b6,  byte b7,  byte b8, byte b9,
@@ -123,6 +126,9 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         }
     }
 
+    /// <summary>
+    /// Constructor used when generating new Suid from given date and tag and generating random part.
+    /// </summary>
     private Suid(DateTimeOffset date, byte tag)
     {
         b0 = tag;
@@ -149,6 +155,9 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         b15 = (byte)rand.Next(0, 256);
     }
 
+    /// <summary>
+    /// Constructor used within for System.Runtime.Serialization.ISerializable deserialization.
+    /// </summary>
     private Suid(int i1, int i2, int i3, int i4)
     {
         b0 = (byte)((i1 >> 24) & 0xFF);
@@ -177,6 +186,9 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         }
     }
 
+    /// <summary>
+    /// Constructor used within for System.Runtime.Serialization.ISerializable deserialization.
+    /// </summary>
     private Suid(SerializationInfo info, StreamingContext streamingContext)
         : this(info.GetInt32("i1"), info.GetInt32("i2"), info.GetInt32("i3"), info.GetInt32("i4"))
     {

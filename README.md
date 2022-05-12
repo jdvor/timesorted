@@ -31,7 +31,7 @@ dotnet tool install -g coverlet.console
 dotnet tool install -g dotnet-reportgenerator-globaltool
 
 dotnet build
-coverlet .\test\Skeleton.Library.Tests\bin\Debug\net6.0\Skeleton.Library.Tests.dll -t dotnet -a "test --no-build" --exclude "[*]namespace*"
+coverlet .\test\TimeSorted.Tests\bin\Debug\net6.0\TimeSorted.Tests.dll -t dotnet -a "test --no-build" --exclude "[*]namespace*"
 
 dotnet test --collect:"XPlat Code Coverage"
 
