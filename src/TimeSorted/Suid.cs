@@ -311,6 +311,9 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         });
     }
 
+    /// <summary>
+    /// Converts the Suid instance to Guid which would have same text representation ToString("D").
+    /// </summary>
     public Guid ToGuid()
     {
         int a = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
@@ -319,6 +322,11 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         return new Guid(a, b, c, b8, b9, b10, b11, b12, b13, b14, b15);
     }
 
+    /// <summary>
+    /// Returns fixed size byte[16] array, which contains internal Suid bytes in order.
+    /// Consider using WriteTo methods rather than creating new byte array.
+    /// </summary>
+    /// <returns>byte[16]</returns>
     public byte[] ToByteArray()
     {
         return new[] { b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15 };
@@ -338,12 +346,54 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
     public long ToUnixTimeMilliseconds()
         => ToUnixTimeMilliseconds(b1, b2, b3, b4, b5, b6);
 
+    public void WriteTo(Span<byte> bytes)
+    {
+        bytes[0] = b0;
+        bytes[1] = b0;
+        bytes[2] = b0;
+        bytes[3] = b0;
+        bytes[4] = b0;
+        bytes[5] = b0;
+        bytes[6] = b0;
+        bytes[7] = b0;
+        bytes[8] = b0;
+        bytes[9] = b0;
+        bytes[10] = b0;
+        bytes[11] = b0;
+        bytes[12] = b0;
+        bytes[13] = b0;
+        bytes[14] = b0;
+        bytes[15] = b0;
+    }
+
+    public void WriteTo(Stream stream)
+    {
+        stream.WriteByte(b0);
+        stream.WriteByte(b1);
+        stream.WriteByte(b2);
+        stream.WriteByte(b3);
+        stream.WriteByte(b4);
+        stream.WriteByte(b5);
+        stream.WriteByte(b6);
+        stream.WriteByte(b7);
+        stream.WriteByte(b8);
+        stream.WriteByte(b9);
+        stream.WriteByte(b10);
+        stream.WriteByte(b11);
+        stream.WriteByte(b12);
+        stream.WriteByte(b13);
+        stream.WriteByte(b14);
+        stream.WriteByte(b15);
+    }
+
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         var i1 = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
         var i2 = (b4 << 24) | (b5 << 16) | (b6 << 8) | b7;
         var i3 = (b8 << 24) | (b9 << 16) | (b10 << 8) | b11;
         var i4 = (b12 << 24) | (b13 << 16) | (b14 << 8) | b15;
+
+        // ReSharper disable HeapView.BoxingAllocation
         info.AddValue("i1", i1, typeof(int));
         info.AddValue("i2", i2, typeof(int));
         info.AddValue("i3", i3, typeof(int));
@@ -352,14 +402,14 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
 
     public static bool TryParse(ReadOnlySpan<byte> b, out Suid suid)
     {
-        if (b.Length != 16)
+        if (b.Length < 16)
         {
             suid = Empty;
             return false;
         }
 
         suid = new Suid(b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15], true);
-        return true;
+        return !suid.IsEmpty;
     }
 
     public static bool TryParse(ReadOnlySpan<char> s, out Suid suid)
@@ -402,7 +452,7 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
         }
 
         suid = new Suid(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, false);
-        return true;
+        return !suid.IsEmpty;
     }
 
     public string ToDebugString()

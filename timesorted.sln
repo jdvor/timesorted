@@ -7,8 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution", "solution", "{19
 		dependencies.props = dependencies.props
 		README.md = README.md
 		shared.props = shared.props
-		publish.ps1 = publish.ps1
 		.editorconfig = .editorconfig
+		pack.sh = pack.sh
+		publish.sh = publish.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB6574B5-C860-451C-A4D4-EDF532E1B9CB}"

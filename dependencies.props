@@ -1,17 +1,10 @@
 <Project>
 
   <PropertyGroup>
-    <!-- Runtime dependecies -->
-    <MicrosoftExtensionsVersion>5.0.0</MicrosoftExtensionsVersion>
-    <SpectreConsoleVersion>0.42.0</SpectreConsoleVersion>
-    <GoogleProtobufVersion>3.18.1</GoogleProtobufVersion>
-    <AsposeZipVersion>21.10.0</AsposeZipVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
 
     <!-- Code analysis (compile time only) -->
     <StyleCopAnalyzersVersion>1.2.0-beta.406</StyleCopAnalyzersVersion>
+    <SourceLinkVersion>1.1.1</SourceLinkVersion>
 
     <!-- Tests -->
     <MoqVersion>4.16.1</MoqVersion>
@@ -21,7 +14,7 @@
     <XunitRunnerVersion>2.4.3</XunitRunnerVersion>
     <CoverletCollector>3.1.0</CoverletCollector>
 
-    <!-- Tests -->
+    <!-- Benchmarks -->
     <BenchmarkDotNetVersion>0.13.1</BenchmarkDotNetVersion>
   </PropertyGroup>
 

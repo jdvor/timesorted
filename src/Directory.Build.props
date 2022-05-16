@@ -9,23 +9,32 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Label="NuGet package">
     <IsPackable>true</IsPackable>
-    <PackageProjectUrl>https://git.nanox.cz/it/skeletons/dotnet-library/blob/master/README.md</PackageProjectUrl>
-    <RepositoryUrl>https://git.nanox.cz/it/skeletons/dotnet-library</RepositoryUrl>
-    <PackageTags>skeleton; template</PackageTags>
+    <PackageProjectUrl>https://github.com/jdvor/timesorted/blob/main/README.md</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jdvor/timesorted</RepositoryUrl>
+    <PackageTags>time</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) 2022 Nano Energies, s.r.o.</Copyright>
-    <Authors>Jan Dvorak; Miroslav Osko</Authors>
+    <Authors>Jan Dvorak</Authors>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <!-- https://github.com/clairernovotny/DeterministicBuilds -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <Using Remove="System.IO" />
     <Using Remove="System.Net.Http" />
   </ItemGroup>
-    
+
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzersVersion)" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>

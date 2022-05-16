@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(DotnetFramework)</TargetFramework>
-<!--    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>-->
-    <Description>Lorem ispum dolor sit.</Description>
+    <Description>Time-sortable efficient value types</Description>
   </PropertyGroup>
 
 </Project>
