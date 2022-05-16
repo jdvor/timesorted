@@ -32,4 +32,4 @@ jobs:
         run: dotnet build -c Release -p:TreatWarningsAsErrors=true -v minimal --no-restore --nologo -clp:NoSummary
 
       - name: Run tests
-        run: dotnet test -v minimal --no-build --nologo
+        run: dotnet test -c Release -v minimal --no-build --nologo
