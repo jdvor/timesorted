@@ -31,6 +31,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bench", "bench", "{96985C1F
 		bench\Directory.Build.props = bench\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{9C741AA8-8604-47E2-B653-EE4190B26C33}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\test.yml = .github\workflows\test.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +60,6 @@ Global
 		{DB6574B5-C860-451C-A4D4-EDF532E1B9CB} = {1946D270-F0F7-4558-B56B-BDC12563A129}
 		{42F98E33-53D6-4CA6-9954-91CCDD713B1E} = {1946D270-F0F7-4558-B56B-BDC12563A129}
 		{96985C1F-3E73-4518-B3DB-8077C60B3F9C} = {1946D270-F0F7-4558-B56B-BDC12563A129}
+		{9C741AA8-8604-47E2-B653-EE4190B26C33} = {1946D270-F0F7-4558-B56B-BDC12563A129}
 	EndGlobalSection
 EndGlobal

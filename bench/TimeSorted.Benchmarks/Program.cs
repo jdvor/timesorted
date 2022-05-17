@@ -7,5 +7,5 @@ if (args.Length > 0)
 }
 else
 {
-    BenchmarkRunner.Run<TryParseBench>();
+    BenchmarkRunner.Run<ToStringBench>();
 }

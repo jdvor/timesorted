@@ -1,5 +1,6 @@
 publish/
-coverage/
+packages/
+BenchmarkDotNet.Artifacts/
 local.settings.json
 *.dev.json
 AssemblyInfoGenerated.cs
