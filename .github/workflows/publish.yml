@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # history is required for finding version tags
 
       - name: Set executable permission for scripts
         shell: bash
