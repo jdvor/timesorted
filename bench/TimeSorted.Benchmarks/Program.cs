@@ -7,5 +7,22 @@ if (args.Length > 0)
 }
 else
 {
-    BenchmarkRunner.Run<ToStringBench>();
+    Console.WriteLine("a) NewSuidBench");
+    Console.WriteLine("b) ToStringBench");
+    Console.WriteLine("c) TryParseBench");
+    var key = Console.ReadKey();
+    switch (key.Key)
+    {
+        case ConsoleKey.A:
+            BenchmarkRunner.Run<NewSuidBench>();
+            break;
+
+        case ConsoleKey.B:
+            BenchmarkRunner.Run<ToStringBench>();
+            break;
+
+        case ConsoleKey.C:
+            BenchmarkRunner.Run<TryParseBench>();
+            break;
+    }
 }

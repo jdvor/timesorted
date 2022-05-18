@@ -144,14 +144,16 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
 
         // randomly generated portion of the Suid
         var rand = Rand.Value!;
-        b7 = (byte)rand.Next(0, 256);
-        b8 = (byte)rand.Next(0, 256);
-        b9 = (byte)rand.Next(0, 256);
-        b10 = (byte)rand.Next(0, 256);
-        b11 = (byte)rand.Next(0, 256);
-        b12 = (byte)rand.Next(0, 256);
-        b13 = (byte)rand.Next(0, 256);
-        b14 = (byte)rand.Next(0, 256);
+        var i1 = rand.Next();
+        var i2 = rand.Next();
+        b7 = (byte)((i1 >> 24) & 0xFF);
+        b8 = (byte)((i1 >> 16) & 0xFF);
+        b9 = (byte)((i1 >> 8) & 0xFF);
+        b10 = (byte)(i1 & 0xFF);
+        b11 = (byte)((i2 >> 24) & 0xFF);
+        b12 = (byte)((i2 >> 16) & 0xFF);
+        b13 = (byte)((i2 >> 8) & 0xFF);
+        b14 = (byte)(i2 & 0xFF);
         b15 = (byte)rand.Next(0, 256);
     }
 
