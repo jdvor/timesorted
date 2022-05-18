@@ -1,16 +1,13 @@
 name: Tests
 on:
   push:
-    paths-ignore:
-      - "**.md"
-      - "**.sh"
+    branches: ['**']
+    paths-ignore: ['**.md', '**.sh']
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "**.md"
-      - "**.sh"
+    paths-ignore: ['**.md', '**.sh']
 env:
-  DOTNET_VERSION: "6.0.x"
+  DOTNET_VERSION: '6.0.x'
 jobs:
   test:
     name: test-${{matrix.os}}
