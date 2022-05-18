@@ -1,12 +1,14 @@
 name: Tests
 on:
   push:
+    paths-ignore:
+      - "**.md"
+      - "**.sh"
   pull_request:
     branches: [main]
     paths-ignore:
       - "**.md"
       - "**.sh"
-      - "**.ps1"
 env:
   DOTNET_VERSION: "6.0.x"
 jobs:
