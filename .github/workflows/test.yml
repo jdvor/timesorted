@@ -2,10 +2,10 @@ name: Tests
 on:
   push:
     branches: ['**']
-    paths-ignore: ['**.md', '**.sh']
+    paths-ignore: ['**.md', '**.sh', '.github/workflows/*.yml']
   pull_request:
     branches: [main]
-    paths-ignore: ['**.md', '**.sh']
+    paths-ignore: ['**.md', '**.sh', '.github/workflows/*.yml']
 env:
   DOTNET_VERSION: '6.0.x'
 jobs:
