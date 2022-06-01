@@ -351,21 +351,21 @@ public readonly struct Suid : IEquatable<Suid>, IComparable<Suid>, IComparable, 
     public void WriteTo(Span<byte> bytes)
     {
         bytes[0] = b0;
-        bytes[1] = b0;
-        bytes[2] = b0;
-        bytes[3] = b0;
-        bytes[4] = b0;
-        bytes[5] = b0;
-        bytes[6] = b0;
-        bytes[7] = b0;
-        bytes[8] = b0;
-        bytes[9] = b0;
-        bytes[10] = b0;
-        bytes[11] = b0;
-        bytes[12] = b0;
-        bytes[13] = b0;
-        bytes[14] = b0;
-        bytes[15] = b0;
+        bytes[1] = b1;
+        bytes[2] = b2;
+        bytes[3] = b3;
+        bytes[4] = b4;
+        bytes[5] = b5;
+        bytes[6] = b6;
+        bytes[7] = b7;
+        bytes[8] = b8;
+        bytes[9] = b9;
+        bytes[10] = b10;
+        bytes[11] = b11;
+        bytes[12] = b12;
+        bytes[13] = b13;
+        bytes[14] = b14;
+        bytes[15] = b15;
     }
 
     public void WriteTo(Stream stream)
