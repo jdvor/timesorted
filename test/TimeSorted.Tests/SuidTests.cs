@@ -1,9 +1,10 @@
 namespace TimeSorted.Tests;
 
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using Xunit;
 
-public class UnitTest1
+public class SuidTests
 {
     [Fact]
     public void Comparable()
@@ -53,6 +54,36 @@ public class UnitTest1
 
         Assert.True(ok);
         Assert.Equal(expected, actual);
+    }
+
+    private static readonly JsonSerializerOptions JsonOpts = new JsonSerializerOptions().AppendSuidConverters();
+
+    [Fact]
+    public void JsonSerializable()
+    {
+        var expected = Suid.NewSuid(tag: 8);
+
+        var json = JsonSerializer.Serialize(expected, JsonOpts);
+        var deserialized = JsonSerializer.Deserialize<Suid>(json, JsonOpts);
+
+        Assert.Equal(expected, deserialized);
+    }
+
+    [Fact]
+    public void JsonSerializableWithNull()
+    {
+        var expected = new ExampleWithSuid
+        {
+            Value1 = Suid.NewSuid(tag: 8),
+        };
+
+        var json = JsonSerializer.Serialize(expected, JsonOpts);
+        var deserialized = JsonSerializer.Deserialize<ExampleWithSuid>(json, JsonOpts)!;
+
+        Assert.Equal(expected.Value1, deserialized.Value1);
+        Assert.Equal(expected.Value2, deserialized.Value2);
+        Assert.Equal(expected.Value3, deserialized.Value3);
+        Assert.DoesNotContain("Value3", json);
     }
 
     [Fact]
